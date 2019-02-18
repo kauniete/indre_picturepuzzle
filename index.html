@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Picture puzzle</title>
+    <style>
+      h1 {
+        font-size: 15px;
+      }
+      #container {
+        display: grid;
+        background-color: beige;
+        /*width: 200px;*/
+      }
+      .piece {
+        outline: 0.5px solid grey;
+      }
+      #draggable {
+        text-align: center;
+        background: white;
+        position: absolute;
+      }
+      #pic {
+        width: 450px;
+      }
+      #y,
+      #x {
+        width: 40px;
+      }
+      /*.dropzone {
+        width: 200px;
+        height: 20px;
+        background: blueviolet;
+        margin-bottom: 10px;
+        padding: 10px;
+      }*/
+      img {
+        display: grid;
+      }
+      /*.dot {
+        position: absolute;
+        width: 40px;
+        height: 40px;
+        background-color: rgba(0, 0, 0, 0.36);
+      }*/
+    </style>
+  </head>
+  <body class="theBody">
+    <h1>
+      Type a picture address and number of pieces in each direction, or just hit
+      "Make my puzzle" to get 3 by 3 puzzle of the gorgeous Nikolaj
+      Coster-Waldau
+    </h1>
+    <!--<button>Load Image</button>-->
+    <input
+      id="pic"
+      type="text"
+      name="picture"
+      value="https://minnesotafanfusion.com/wp-content/uploads/2018/04/nikolaj_web.jpg"
+    />
+    <input id="y" type="text" name="y axis" value="3" />
+    <input id="x" type="text" name="x axis" value="3" />
+    <button>Make my puzzle</button>
+    <img src="" alt="" />
+    <div id="container"></div>
+    <div
+      id="draggable"
+      draggable="true"
+      ondragstart="event.dataTransfer.setData('text/plain',null)"
+    >
+      This div is draggable
+    </div>
+    <!--<div class="dropzone"></div>
+    <div class="dropzone"></div>
+    <div class="dropzone"></div>
+    <div class="dropzone"></div>-->
+
+    <script>
+      const imageAddress = document.querySelector("#pic").value;
+      /*function theImageHasLoaded() {
+        alert("THE IMAGE HAS LOADED");
+      }*/
+      document.addEventListener("DOMContentLoaded", startTheScript);
+
+      function startTheScript() {
+        document
+          .querySelector("button")
+          .addEventListener("click", loadTheImage);
+      }
+
+      function loadTheImage() {
+        document.querySelector("img").src = imageAddress;
+        document.querySelector("img").onload = makeImageSmaller;
+      }
+      function makeImageSmaller() {
+        document.querySelector("img").width = 150;
+        document.querySelector("img").height = 150;
+        //let imageWidth = document.querySelector("img").naturalWidth;
+        //let imageHeight = document.querySelector("img").naturalHeight;
+        //console.log(imageWidth, imageHeight);
+        //console.log(makeImageSmaller);
+        generateDropzones();
+      }
+      //const yAxis =
+      //const xAxis =
+      function generateDropzones() {
+        //console.log("generateDropzones");
+        const numOfXPieces = document.querySelector("#x").value;
+        const numOfYPieces = document.querySelector("#y").value;
+        //console.log(numOfXPieces);
+        //console.log(numOfYPieces);
+        const container_width = document.querySelector("img").naturalWidth; //instead of 400
+        const container_height = document.querySelector("img").naturalHeight; //instead of 400
+        //console.log(container_height);
+        //console.log(container_width);
+        document.querySelector(
+          "#container"
+        ).style.gridTemplateColumns = `repeat(${numOfXPieces}, 1fr)`;
+        document.querySelector(
+          "#container"
+        ).style.width = `${container_width}px`;
+        for (let y = 0; y < numOfYPieces; y++) {
+          for (let x = 0; x < numOfXPieces; x++) {
+            let piece = document.createElement("div");
+
+            piece.style.height = container_height / numOfYPieces + "px";
+
+            piece.textContent = `${x}${y}`;
+            piece.classList.add("piece");
+
+            document.querySelector("#container").appendChild(piece);
+          }
+        }
+        draggablePieces();
+      }
+      function draggablePieces() {
+        console.log("draggablePieces");
+        let dragged;
+        document.addEventListener("drag", function(event) {});
+
+        document.addEventListener("dragstart", function(event) {
+          dragged = event.target;
+          event.target.style.opacity = 0.5;
+        });
+        document.addEventListener("dragend", function(event) {
+          event.target.style.opacity = "";
+        });
+        document.addEventListener("dragover", function(event) {
+          event.preventDefault();
+        });
+        document.addEventListener("drop", function(event) {
+          event.preventDefault();
+          console.log("DROP", event.target.className);
+          if (event.target.className == "piece") {
+            event.target.style.background = "";
+            dragged.parentNode.removeChild(dragged);
+            event.target.appendChild(dragged);
+            dragged.style.left = event.target.style.left;
+            dragged.style.top = event.target.style.top;
+          } else if (event.target.className == "theBody") {
+            dragged.style.left = event.pageX + "px";
+            dragged.style.top = event.pageY + "px";
+          }
+        });
+
+        createDropZones();
+      }
+      function createDropZones() {
+        //console.log(createDropZones);
+        document.querySelectorAll("#draggable").forEach(eachDraggable => {
+          eachDraggable.style.left = `${Math.random() * 500 + 250}px`;
+        });
+        getPictureOnTheDraggable();
+      }
+      function getPictureOnTheDraggable() {
+        //console.log(getPictureOnTheDraggable);
+        //document.piece.style.backgroundImage = document.querySelector("img");
+        //piece.style.width=
+        //piece.style.height=
+        //piece.style.backgroundPosition=
+        dataset();
+      }
+      function dataset() {
+        console.log(dataset);
+        showThatCorrect();
+      }
+
+      function showThatCorrect() {
+        console.log(showThatCorrect);
+        changeHeading();
+      }
+      function changeHeading() {
+        console.log(changeHeading);
+        changeButtonText();
+      }
+      function changeButtonText() {
+        console.log(changeButtonText);
+      }
+    </script>
+  </body>
+</html>
